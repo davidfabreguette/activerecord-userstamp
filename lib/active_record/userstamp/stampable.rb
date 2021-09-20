@@ -12,9 +12,9 @@ module ActiveRecord::Userstamp::Stampable
     class_attribute  :stamper_class_name
 
     before_validation :set_updater_attribute, if: :record_userstamp
-    before_validation :set_creator_attribute, on: :create, if: :record_userstamp
+    before_validation :set_creator_attribute, if: :record_userstamp
     before_save :set_updater_attribute, if: :record_userstamp
-    before_save :set_creator_attribute, on: :create, if: :record_userstamp
+    before_save :set_creator_attribute, if: :record_userstamp
     before_destroy :set_deleter_attribute, if: :record_userstamp
   end
 
