@@ -72,7 +72,6 @@ module ActiveRecord::Userstamp::Stampable
       ActiveRecord::Userstamp::Utilities.remove_association(self, :creator)
       ActiveRecord::Userstamp::Utilities.remove_association(self, :updater)
       ActiveRecord::Userstamp::Utilities.remove_association(self, :deleter)
-
       associations = ActiveRecord::Userstamp::Utilities.available_association_columns(self)
       return if associations.nil?
 
@@ -80,14 +79,15 @@ module ActiveRecord::Userstamp::Stampable
       klass = stamper_class.try(:name)
       relation_options = options.reverse_merge(class_name: klass)
 
-      belongs_to :creator, relation_options.reverse_merge(foreign_key: config.creator_attribute) if
+      belongs_to :creator, **relation_options.reverse_merge(foreign_key: config.creator_attribute) if
         associations.first
-      belongs_to :updater, relation_options.reverse_merge(foreign_key: config.updater_attribute) if
+      belongs_to :updater, **relation_options.reverse_merge(foreign_key: config.updater_attribute) if
         associations.second
+
       if associations.third
         relation_options.reverse_merge!(required: false) if ActiveRecord::VERSION::MAJOR >= 5 ||
           (ActiveRecord::VERSION::MAJOR == 4 && ActiveRecord::VERSION::MINOR >= 2)
-        belongs_to :deleter, relation_options.reverse_merge(foreign_key: config.deleter_attribute)
+        belongs_to :deleter, **relation_options.reverse_merge(foreign_key: config.deleter_attribute)
       end
     end
   end
